@@ -18,7 +18,7 @@
     "release:major": "standard-version --release-as major && git push --follow-tags origin master",
     "docker": "docker build -t angularexampleapp . && docker run -d -p 4200:80 angularexampleapp",
     "update": "ng update --all --force",
-    "start:watch": "concurrently -k -n \"build-client,build-server,run-server\" -c \"bgMagenta.bold,bgCyan.bold,bgBlue.bold\" \"npm run build -- --watch\" \"npm run build:server -- --watch\" \"wait-on -d 10000 dist/server/main.js && ts-node hmr\"",
+    "start:watch": "concurrently -k -n \"build-client,build-server,run-server\" -c \"bgMagenta.bold,bgCyan.bold,bgBlue.bold\" \"npm run build -- --watch\" \"npm run build:server -- --watch\" \"wait-on -d 10000 dist/server/main.js dist/browser/main.js && NODE_ENV=development ts-node hmr\"",
     "build:ssr": "concurrently -n \"build-client,build-server\" -c \"bgMagenta.bold,bgCyan.bold\" \"npm run build -- --prod\" \"npm run build:server\" && npm run webpack:server",
     "start": "node dist/server",
     "build:server": "ng run angular-example-app:server",

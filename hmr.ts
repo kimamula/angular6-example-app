@@ -2,9 +2,20 @@ import * as webpack from 'webpack';
 import * as webpackDevMiddleware from 'webpack-dev-middleware';
 import * as webpackHotMiddleware from 'webpack-hot-middleware';
 import * as conf from './webpack.server.config';
-import { app } from './server';
+import { app, start } from './server';
 
-const compiler = webpack(conf);
+const compiler = webpack({
+  ...conf,
+  entry: {
+    'server': './dist/server/main',
+    'main': ['webpack-hot-middleware/client', './dist/browser/main']
+  },
+  module: undefined,
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoEmitOnErrorsPlugin()
+  ]
+});
 
 app.use(webpackDevMiddleware(compiler, {
   noInfo: true,
@@ -18,3 +29,5 @@ app.use(webpackHotMiddleware(compiler, {
 }));
 
 process.on('SIGINT', () => process.exit(0));
+
+start();

@@ -31,23 +31,24 @@ app.engine('html', ngExpressEngine({
   ]
 }));
 
-app.set('view engine', 'html');
-app.set('views', join(DIST_FOLDER, 'browser'));
+export function start() {
+  app.set('view engine', 'html');
+  app.set('views', join(DIST_FOLDER, 'browser'));
 
-// TODO: implement data requests securely
-app.get('/api/*', (req, res) => {
-  res.status(404).send('data requests are not supported');
-});
+  // Server static files from /browser
+  app.get('*.*', express.static(join(DIST_FOLDER, 'browser')));
 
-// Server static files from /browser
-app.get('*.*', express.static(join(DIST_FOLDER, 'browser')));
+  // All regular routes use the Universal engine
+  app.get('*', (req, res) => {
+    res.render('index', { req });
+  });
 
-// All regular routes use the Universal engine
-app.get('*', (req, res) => {
-  res.render('index', { req });
-});
+  // Start up the Node server
+  app.listen(PORT, () => {
+    console.log(`Node server listening on http://localhost:${PORT}`);
+  });
+}
 
-// Start up the Node server
-app.listen(PORT, () => {
-  console.log(`Node server listening on http://localhost:${PORT}`);
-});
+if (process.env.NODE_ENV !== 'development') {
+  start();
+}
