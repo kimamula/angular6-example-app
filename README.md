@@ -1,10 +1,12 @@
 # Angular SSR with GAE SE
 
-# Live demo
+https://angular.io/guide/universal の記載に従い、 https://github.com/Ismaestro/angular6-example-app を SSR 対応した。
+
+## Live demo
 
 https://angular-ssr-213906.appspot.com/
 
-## 課題
+### 課題
 
 - HTTP/2 Server Push が使えていない
   - polymer-cli や preact-cli は、ビルド時に `push-manifest.json` を生成してくれ、これを [prpl-server-node](https://github.com/Polymer/prpl-server-node) に食わせると link header を付けてくれるので Push できる
@@ -17,7 +19,7 @@ https://angular-ssr-213906.appspot.com/
     - たとえば、 https://angular-ssr-213906.appspot.com/heroes を開いた時、現状では client side で route の解析をしてから 0.bfc0a6330cc0195f54cd.js をリクエストする
     - サーバーサイドで https://angular-ssr-213906.appspot.com/heroes のレスポンスに link header を付けてあげれば、 client side での解析を待たずに 0.bfc0a6330cc0195f54cd.js が Push され、 client side でそれが必要だと分かった時にはもうそれが使えるような状態になっている
 
-# Run locally
+## Run locally
 
 ```sh
 $ npm i
