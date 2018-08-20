@@ -1,5 +1,5 @@
 import {Observable, of, throwError as observableThrowError} from 'rxjs';
-import {Injectable} from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {AppConfig} from '../../../config/app.config';
 import {Hero} from './hero.model';
@@ -18,12 +18,17 @@ export class HeroService {
   heroesUrl: string;
 
   static checkIfUserCanVote(): boolean {
+    if (typeof localStorage === 'undefined') {
+      return true;
+    }
     return Number(localStorage.getItem('votes')) < AppConfig.votesLimit;
   }
 
-  constructor(private http: HttpClient,
-              private translateService: TranslateService,
-              private snackBar: MatSnackBar) {
+  constructor(
+    private http: HttpClient,
+    private translateService: TranslateService,
+    private snackBar: MatSnackBar,
+  ) {
     this.heroesUrl = AppConfig.endpoints.heroes;
   }
 

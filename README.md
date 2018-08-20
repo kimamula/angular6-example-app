@@ -1,3 +1,39 @@
+# Angular SSR with GAE SE
+
+# Live demo
+
+https://angular-ssr-213906.appspot.com/
+
+## 課題
+
+- HTTP/2 Server Push が使えていない
+  - polymer-cli や preact-cli は、ビルド時に `push-manifest.json` を生成してくれ、これを [prpl-server-node](https://github.com/Polymer/prpl-server-node) に食わせると link header を付けてくれるので Push できる
+    - 詳しい仕組みは[このあたり](https://github.com/Polymer/prpl-server-node#http2-server-push)に書いてある
+    - [GAE SE での使い方](https://github.com/Polymer/prpl-server-node#google-app-engine-quickstart)も書いてある。嬉しい。
+  - ビルドプロセスで自動生成してもらわないと、自前で作るのは難しい。 preact-cli は [Webpack plugin](https://github.com/developit/preact-cli/blob/63e2dfe6cc8c92037602a25b21d8e617a84abbc9/src/lib/webpack/push-manifest.js) で対応している。
+    - Angular は [Webpack の設定を利用者側にいじらせない方針](https://github.com/angular/angular-cli/issues/1656)のため、本体で対応してもらわないと無理
+    - [issue](https://github.com/angular/angular-cli/issues/11946) 作った
+  - HTTP/2 Server Push が使えると何が嬉しいか？
+    - たとえば、 https://angular-ssr-213906.appspot.com/heroes を開いた時、現状では client side で route の解析をしてから 0.bfc0a6330cc0195f54cd.js をリクエストする
+    - サーバーサイドで https://angular-ssr-213906.appspot.com/heroes のレスポンスに link header を付けてあげれば、 client side での解析を待たずに 0.bfc0a6330cc0195f54cd.js が Push され、 client side でそれが必要だと分かった時にはもうそれが使えるような状態になっている
+
+# Run locally
+
+```sh
+$ npm i
+
+# with watching
+$ npm run start:watch
+
+# without watchng
+$ npm run build:ssr
+$ npm start
+```
+
+ただし、 watch は[不具合（？）](https://github.com/angular/angular-cli/issues/11945)のため現在正常に動作しない。
+
+以下、オリジナルの README
+
 # Example app with Angular 6 + Angular CLI + Angular Material + Docker + Angular Example Library
 
 > ### Base project made with much  :heart: . Contains CRUD, patterns, generated library, etc.

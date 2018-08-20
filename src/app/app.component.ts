@@ -1,10 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
 import {Meta, Title} from '@angular/platform-browser';
 import {NavigationEnd, Router} from '@angular/router';
 import {AppConfig} from './config/app.config';
 import {MatSnackBar} from '@angular/material';
 import {_} from '@biesbjerg/ngx-translate-extract/dist/utils/utils';
+import { isPlatformServer } from '@angular/common';
 
 declare const Modernizr;
 
@@ -12,17 +13,19 @@ declare const Modernizr;
   selector: 'app-root',
   templateUrl: './app.component.html'
 })
-
 export class AppComponent implements OnInit {
 
-  isOnline: boolean;
+  readonly isOnline: boolean;
 
-  constructor(private translateService: TranslateService,
-              private title: Title,
-              private meta: Meta,
-              private snackBar: MatSnackBar,
-              private router: Router) {
-    this.isOnline = navigator.onLine;
+  constructor(
+    private translateService: TranslateService,
+    private title: Title,
+    private meta: Meta,
+    private snackBar: MatSnackBar,
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    this.isOnline = isPlatformServer(platformId) || navigator.onLine;
   }
 
   ngOnInit() {
@@ -54,6 +57,9 @@ export class AppComponent implements OnInit {
   }
 
   checkBrowserFeatures() {
+    if (isPlatformServer(this.platformId)) {
+      return true;
+    }
     let supported = true;
     for (const feature in Modernizr) {
       if (Modernizr.hasOwnProperty(feature) &&

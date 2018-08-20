@@ -17,7 +17,7 @@ import {ProgressBarService} from './core/services/progress-bar.service';
 
 @NgModule({
   imports: [
-    BrowserModule,
+    BrowserModule.withServerTransition({ appId: 'angular6-example-app' }),
     BrowserAnimationsModule,
     ServiceWorkerModule.register('/ngsw-worker.js', {enabled: environment.production}),
     HttpClientModule,
